@@ -1,0 +1,14 @@
+from app.modules.auth import models as auth_models  # noqa: F401
+from app.modules.hospital import models as hospital_models  # noqa: F401
+from app.modules.patients import models as patient_models  # noqa: F401
+from app.modules.pharmacy import models as pharmacy_models  # noqa: F401
+from app.modules.billing import models as billing_models  # noqa: F401
+from app.modules.audit import models as audit_models  # noqa: F401
+from app.modules.auth import models_extra as auth_extra_models  # noqa: F401
+from app.modules.visits import models as visit_models  # noqa: F401
+from app.modules.attendance import models as attendance_models  # noqa: F401
+from app.modules.chat import models as chat_models  # noqa: F401
+from app.modules.reviews import models as review_models  # noqa: F401
+from app.modules.requests import models as request_models  # noqa: F401
+from app.modules.inventory import models as inventory_models  # noqa: F401
+from app.modules.finance import models as finance_models  # noqa: F401

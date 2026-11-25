@@ -1,0 +1,50 @@
+services:
+  db:
+    image: postgres:16
+    container_name: hms-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: hms_db
+      POSTGRES_USER: hms_user
+      POSTGRES_PASSWORD: change-me-before-use
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - hms_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hms_user -d hms_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: ./apps/api
+    container_name: hms-api
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://hms_user:change-me-before-use@db:5432/hms_db
+      APP_ENV: development
+      CORS_ORIGINS: http://localhost:3000
+    ports:
+      - "${HMS_BIND_ADDRESS:-127.0.0.1}:8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web:
+    build:
+      context: ./apps/web
+    container_name: hms-web
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      - api
+
+volumes:
+  hms_pgdata:

@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: light; }
+body { margin: 0; background: #f8fafc; color: #0f172a; }
+
+/* Printing receipts / invoices: only the .print-area inside an open dialog is printed. */
+@media print {
+  body * { visibility: hidden; }
+  .print-area, .print-area * { visibility: visible; }
+  .print-area { position: absolute; inset: 0 auto auto 0; width: 100%; padding: 12mm; }
+  [role="dialog"], [role="dialog"] * { max-height: none !important; overflow: visible !important; box-shadow: none !important; }
+}
