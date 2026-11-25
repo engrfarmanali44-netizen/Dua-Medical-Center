@@ -34,6 +34,8 @@ class Settings(BaseSettings):
     db_pool_size: int = 5
     db_max_overflow: int = 5
     cors_origins: str = "http://localhost:3000"
+    # true when served over HTTPS (Render / Vercel): sign-in cookies are then only sent over HTTPS.
+    cookie_secure: bool = False
     default_currency: str = "PKR"
     hospital_timezone: str = "Asia/Karachi"
     # Supabase: Realtime "changed" signals (server-only secret key). Empty = realtime disabled.

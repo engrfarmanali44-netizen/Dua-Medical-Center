@@ -4,6 +4,9 @@
  * http://<PC-LAN-IP>:3000 on a phone (and the auth cookie stays same-site in both cases).
  */
 function apiBase(): string {
+  // Hosted (Vercel): the site forwards /api/* to the API server (see next.config.ts), so calls are
+  // same-origin and the sign-in cookies are first-party on every browser, including iPhone Safari.
+  if (process.env.NEXT_PUBLIC_API_PROXY === "1") return "";
   if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
   if (typeof window !== "undefined") return `${window.location.protocol}//${window.location.hostname}:8000`;
   return "http://localhost:8000";

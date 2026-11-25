@@ -1,6 +1,7 @@
 import hashlib
 import secrets
 from datetime import datetime, timedelta, timezone
+from app.core.config import settings
 from fastapi import APIRouter, Depends, HTTPException, Response, Cookie, status
 from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
@@ -50,7 +51,7 @@ def login(payload: LoginRequest, response: Response, db: Session = Depends(get_d
         "access_token",
         create_access_token(str(user.id)),
         httponly=True,
-        secure=False,
+        secure=settings.cookie_secure,
         samesite="lax",
         max_age=20 * 60,
         path="/",
@@ -59,7 +60,7 @@ def login(payload: LoginRequest, response: Response, db: Session = Depends(get_d
         "refresh_token",
         refresh,
         httponly=True,
-        secure=False,
+        secure=settings.cookie_secure,
         samesite="lax",
         max_age=7 * 24 * 60 * 60,
         path="/api/v1/auth",
@@ -69,7 +70,7 @@ def login(payload: LoginRequest, response: Response, db: Session = Depends(get_d
         "access_token",
         access_token,
         httponly=True,
-        secure=False,
+        secure=settings.cookie_secure,
         samesite="lax",
         max_age=20 * 60,
         path="/",
@@ -169,8 +170,8 @@ def refresh(response: Response, refresh_token: str | None = Cookie(default=None)
     ))
     db.commit()
     access = create_access_token(str(session.user_id))
-    response.set_cookie("access_token", access, httponly=True, secure=False, samesite="lax", max_age=20 * 60, path="/")
-    response.set_cookie("refresh_token", replacement, httponly=True, secure=False, samesite="lax",
+    response.set_cookie("access_token", access, httponly=True, secure=settings.cookie_secure, samesite="lax", max_age=20 * 60, path="/")
+    response.set_cookie("refresh_token", replacement, httponly=True, secure=settings.cookie_secure, samesite="lax",
                         max_age=7 * 24 * 60 * 60, path="/api/v1/auth")
     return TokenResponse(access_token=access)
 
